@@ -1,29 +1,49 @@
-import App from '../components/App'
-import InfoBox from '../components/InfoBox'
-import Header from '../components/Header'
-import Submit from '../components/Submit'
-import PostList from '../components/PostList'
-import { withApollo } from '../lib/apollo'
+import React, {useState} from 'react';
+import gql from 'graphql-tag';
+import { useLazyQuery } from '@apollo/react-hooks';
+import { withApollo } from '../lib/apollo';
+import LoginForm from '../components/LoginForm';
 
-const IndexPage = () => (
-  <App>
-    <Header />
-    <InfoBox>
-      ℹ️ This example shows how to fetch all initial apollo queries on the
-      server. If you <a href="/">reload</a> this page you won't see a loader
-      since Apollo fetched all needed data on the server. This prevents{' '}
-      <a
-        href="https://nextjs.org/blog/next-9#automatic-static-optimization"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        automatic static optimization
-      </a>{' '}
-      in favour of full Server-Side-Rendering.
-    </InfoBox>
-    <Submit />
-    <PostList />
-  </App>
-)
+const GET_FILES = gql`
+  query ReadFiles {
+    allFiles {
+      data {
+        content
+        confidential
+      }
+    }
+  }
+`;
 
-export default withApollo({ ssr: true })(IndexPage)
+const IndexPage = () => {
+  const [loginError, setLoginError] = useState(null);
+  const [loginData, setLoginData] = useState(null);
+  const [getAllFiles, { loading, data: allFilesData, error: allFilesError }] = useLazyQuery(
+    GET_FILES,
+  );
+
+  return (
+    <div>
+      <LoginForm setLoginError={setLoginError} setLoginData={setLoginData} />
+      <button onClick={() => getAllFiles()}>Get All Files</button>
+      <br/>
+      File Data
+      <pre>
+        {loading ? (
+          <div>loading...</div>
+        ) : allFilesError ? (
+          JSON.stringify(allFilesError, null, 2)
+        ) : (
+          JSON.stringify(allFilesData, null, 2)
+        )}
+      </pre>
+      Login Data
+      <pre>
+        {loginError
+          ? JSON.stringify(loginError, null, 2)
+          : JSON.stringify(loginData, null, 2)}
+      </pre>
+    </div>
+  );};
+
+export default withApollo()(IndexPage)
