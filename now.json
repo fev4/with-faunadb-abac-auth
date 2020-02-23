@@ -1,6 +1,4 @@
 {
-  "version": 2,
-  "public": true,
   "scope": "fillipvt",
   "build": {
     "env": {
