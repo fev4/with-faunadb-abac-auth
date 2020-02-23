@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import gql from 'graphql-tag';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
+import cookie from 'js-cookie';
 
 const LOGIN_USER = gql`
   mutation LoginEmployeeUser($input: LoginUserInput) {
@@ -9,6 +10,7 @@ const LOGIN_USER = gql`
 `;
 
 const LoginForm = ({ setLoginError, setLoginData}) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const client = useApolloClient();
   const [username, setUsername] = useState('');
   const [pwd, setPwd] = useState('');
@@ -22,21 +24,22 @@ const LoginForm = ({ setLoginError, setLoginData}) => {
       },
     },
     onCompleted: data => {
-      if (!data.loginUser) {
-        return null;
-      } else {
-        localStorage.setItem('token', data?.loginUser);
-        setLoginData(data);
-      }
+      cookie.set('token', data?.loginUser, {
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
+        expires: 6,
+      });
+      setLoginData(data);
+      setIsLoggedIn(true);
+      setLoginError(false);
     },
     onError: error => {
-      if (!error) {
-        return null;
-      } else {
-        setLoginError(error);
-      }
+      setLoginError(error);
     }
   });
+  useEffect(() => {
+    setIsLoggedIn(cookie.get('token') ? true : false);
+  }, []);
   return (
     <form
       onSubmit={e => {
@@ -44,33 +47,39 @@ const LoginForm = ({ setLoginError, setLoginData}) => {
         loginUser();
       }}
     >
-      <label htmlFor="username">Username:</label>
-      <input
-        type="username"
-        id="username"
-        name="username"
-        value={username}
-        onChange={e => setUsername(e.target.value)}
-      />
-      <label htmlFor="pwd">Password:</label>
-      <input
-        type="password"
-        id="pwd"
-        name="pwd"
-        value={pwd}
-        onChange={e => setPwd(e.target.value)}
-      />
-      <button type="submit">Login</button>
-      <button
-        onClick={e => {
-          e.preventDefault();
-          client.resetStore();
-          localStorage.removeItem('token');
-          setLoginData(null);
-        }}
-      >
-        Logout
-      </button>
+      {!isLoggedIn ? (
+        <>
+          <label htmlFor="username">Username:</label>
+          <input
+            type="username"
+            id="username"
+            name="username"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+          />
+          <label htmlFor="pwd">Password:</label>
+          <input
+            type="password"
+            id="pwd"
+            name="pwd"
+            value={pwd}
+            onChange={e => setPwd(e.target.value)}
+          />
+          <button type="submit">Login</button>
+        </>
+      ) : (
+        <button
+          onClick={e => {
+            e.preventDefault();
+            client.resetStore();
+            cookie.remove('token');
+            setLoginData(null);
+            setIsLoggedIn(false);
+          }}
+        >
+          Logout
+        </button>
+      )}
     </form>
   );
 };

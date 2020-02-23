@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import gql from 'graphql-tag';
 import { useLazyQuery } from '@apollo/react-hooks';
+import cookie from 'js-cookie';
 import { withApollo } from '../lib/apollo';
 import LoginForm from '../components/LoginForm';
 
@@ -17,7 +18,7 @@ const GET_FILES = gql`
 
 const IndexPage = () => {
   const [loginError, setLoginError] = useState(null);
-  const [loginData, setLoginData] = useState(null);
+  const [loginData, setLoginData] = useState(cookie.get('token'));
   const [getAllFiles, { loading, data: allFilesData, error: allFilesError }] = useLazyQuery(
     GET_FILES,
   );
