@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "public": true,
+  "scope": "fillipvt",
+  "env": {
+    "FAUNADB_KEY": "@faunadb_key"
+  }
+}
