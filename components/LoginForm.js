@@ -1,22 +1,15 @@
-import React, {useState, useEffect} from 'react';
-import gql from 'graphql-tag';
+import React, { useState, useEffect } from 'react';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
 import cookie from 'js-cookie';
+import { LOGIN_USER } from '../lib/mutations/loginUser';
+import { GET_ALL_FILES } from '../lib/queries/getAllFiles';
 
-const LOGIN_USER = gql`
-  mutation LoginEmployeeUser($input: LoginUserInput) {
-    loginUser(input: $input)
-  }
-`;
-
-const LoginForm = ({ setLoginError, setLoginData}) => {
+const LoginForm = ({ setLoginError, setLoginData, getAllFiles }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const client = useApolloClient();
   const [username, setUsername] = useState('');
   const [pwd, setPwd] = useState('');
-  const [
-    loginUser
-  ] = useMutation(LOGIN_USER, {
+  const [loginUser] = useMutation(LOGIN_USER, {
     variables: {
       input: {
         username,
@@ -32,10 +25,11 @@ const LoginForm = ({ setLoginError, setLoginData}) => {
       setLoginData(data);
       setIsLoggedIn(true);
       setLoginError(false);
+      getAllFiles();
     },
     onError: error => {
       setLoginError(error);
-    }
+    },
   });
   useEffect(() => {
     setIsLoggedIn(cookie.get('token') ? true : false);

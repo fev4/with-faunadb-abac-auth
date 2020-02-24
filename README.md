@@ -1,53 +1,26 @@
-# Apollo Example
+The current repository follows insights from several examples:
 
-[Apollo](https://www.apollographql.com/client/) is a GraphQL client that allows you to easily query the exact data you need from a GraphQL server. In addition to fetching and mutating data, Apollo analyzes your queries and their results to construct a client-side cache of your data, which is kept up to date as further queries and mutations are run, fetching more results from the server.
+- [with-apollo](https://github.com/zeit/next.js/tree/canary/examples/with-apollo)
+- [with-cookie-auth-fauna](https://github.com/zeit/next.js/tree/canary/examples/with-cookie-auth-fauna)
+- [with-cookie-auth](https://github.com/zeit/next.js/tree/canary/examples/with-cookie-auth)
+- [api-routes-apollo-server-and-client-auth](https://github.com/zeit/next.js/tree/canary/examples/api-routes-apollo-server-and-client-auth)
+- [faunadb-abac-graphql](https://fauna.com/blog/abac-graphql)
+- [auth example by HaNdTriX](https://github.com/zeit/next.js/pull/10451)
+- [apollo graphql auth docs](https://www.apollographql.com/docs/react/networking/authentication/)
 
-In this simple example, we integrate Apollo seamlessly with Next by wrapping our `pages/index.js` inside a [higher-order component (HOC)](https://facebook.github.io/react/docs/higher-order-components.html). Using the HOC pattern we're able to pass down a central store of query result data created by Apollo into our React component hierarchy defined inside each page of our Next application.
+It showcases how to login and set a cookie with a faunadb key specific to the logged in user following ABAC practices.
 
-On initial page load, while on the server and inside `getInitialProps`, we invoke the Apollo method, [`getDataFromTree`](https://www.apollographql.com/docs/react/api/react-ssr/#getdatafromtree). This method returns a promise; at the point in which the promise resolves, our Apollo Client store is completely initialized.
+There are two users:
 
-This example relies on [graph.cool](https://www.graph.cool) for its GraphQL backend.
+- A manager with username: **bill.lumbergh** and pwd: **123456** which will access all private and public files during all days, except **Sundays**.
+- An employee with username: **peter.gibbons** and pwd: **abcdef** which will only access public files.
 
-Note: Do not be alarmed that you see two renders being executed. Apollo recursively traverses the React render tree looking for Apollo query components. When it has done that, it fetches all these queries and then passes the result to a cache. This cache is then used to render the data on the server side (another React render).
-https://www.apollographql.com/docs/react/api/react-ssr/#getdatafromtree
+The deployment URL to test this out is: [https://with-faunadb-abac-auth.now.sh/](https://with-faunadb-abac-auth.now.sh/)
 
-## Deploy your own
+## Current problems
 
-Deploy the example using [ZEIT Now](https://zeit.co/now):
-
-[![Deploy with ZEIT Now](https://zeit.co/button)](https://zeit.co/new/project?template=https://github.com/zeit/next.js/tree/canary/examples/with-apollo)
-
-_Live Example: https://next-with-apollo.now.sh_
-
-## How to use
-
-### Using `create-next-app`
-
-Execute [`create-next-app`](https://github.com/zeit/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
-
-```bash
-npm init next-app --example with-apollo with-apollo-app
-# or
-yarn create next-app --example with-apollo with-apollo-app
-```
-
-### Download manually
-
-Download the example:
-
-```bash
-curl https://codeload.github.com/zeit/next.js/tar.gz/canary | tar -xz --strip=2 next.js-canary/examples/with-apollo
-cd with-apollo
-```
-
-Install it and run:
-
-```bash
-npm install
-npm run dev
-# or
-yarn
-yarn dev
-```
-
-Deploy it to the cloud with [ZEIT Now](https://zeit.co/new?filter=next.js&utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+Once you login and reload the page, a warning similar to the following appears:
+````
+Warning: Text content did not match. Server: "" Client: ""fnEDlVzxFFACEgOUZVkqYAIT-ec91oE1CgJjxInsmTaRP1__tG0""
+````
+Not sure yet how to solve this.

@@ -1,33 +1,27 @@
-import React, {useState} from 'react';
-import gql from 'graphql-tag';
+import React, { useState } from 'react';
 import { useLazyQuery } from '@apollo/react-hooks';
 import cookie from 'js-cookie';
 import { withApollo } from '../lib/apollo';
 import LoginForm from '../components/LoginForm';
-
-const GET_FILES = gql`
-  query ReadFiles {
-    allFiles {
-      data {
-        content
-        confidential
-      }
-    }
-  }
-`;
+import { GET_ALL_FILES } from '../lib/queries/getAllFiles';
 
 const IndexPage = () => {
   const [loginError, setLoginError] = useState(null);
   const [loginData, setLoginData] = useState(cookie.get('token'));
-  const [getAllFiles, { loading, data: allFilesData, error: allFilesError }] = useLazyQuery(
-    GET_FILES,
-  );
+  const [
+    getAllFiles,
+    { loading, data: allFilesData, error: allFilesError },
+  ] = useLazyQuery(GET_ALL_FILES);
 
   return (
     <div>
-      <LoginForm setLoginError={setLoginError} setLoginData={setLoginData} />
+      <LoginForm
+        setLoginError={setLoginError}
+        setLoginData={setLoginData}
+        getAllFiles={getAllFiles}
+      />
       <button onClick={() => getAllFiles()}>Get All Files</button>
-      <br/>
+      <br />
       File Data
       <pre>
         {loading ? (
