@@ -16,11 +16,3 @@ There are two users:
 - An employee with username: **peter.gibbons** and pwd: **abcdef** which will only access public files.
 
 The deployment URL to test this out is: [https://with-faunadb-abac-auth.now.sh/](https://with-faunadb-abac-auth.now.sh/)
-
-## Current problems
-
-Once you login and reload the page, a warning similar to the following appears:
-````
-Warning: Text content did not match. Server: "" Client: ""fnEDlVzxFFACEgOUZVkqYAIT-ec91oE1CgJjxInsmTaRP1__tG0""
-````
-Not sure yet how to solve this.
