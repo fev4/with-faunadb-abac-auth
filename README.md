@@ -31,7 +31,7 @@ The current Schema used is [found here](https://github.com/fillipvt/with-faunadb
 
 ### Create User `create_user` resolver
 
-Notice here the usage of the `credentials` parameter, which can be part of every document of every collection. We just happen to use it here for documents under the collection called `Users`. Here are the [docs of the `Create` function](https://docs.fauna.com/fauna/current/api/fql/functions/create).
+Notice here the usage of the `credentials` parameter, which can be part of every document of every collection. We just happen to use it here for documents under the collection called `User`. Here are the [docs for the `Create` function](https://docs.fauna.com/fauna/current/api/fql/functions/create).
 
 ````
 Update(Function("create_user"), {
@@ -53,7 +53,7 @@ Update(Function("create_user"), {
 
 ### Login User `login_user` resolver
 
-Notice that we use the Index `unique_User_username` (which was created automatically by FaunaDB when importing the Schema) in order to match the user logging in to the existing users.
+Notice that we use the `Index` `unique_User_username` (which was created automatically by FaunaDB when importing the [Schema]((https://github.com/fillipvt/with-faunadb-abac-auth/blob/master/schema.graphql))) in order to match the user logging in to the existing users.
 
 ````
 Update(Function("login_user"), {
@@ -182,6 +182,7 @@ CreateRole({
         actions: {
           // Action attribute based rule:
           // It grants read access to the File collection.
+          // Public/Private files, except on Sundays
           read: Query(
             Lambda("fileRef",
               Let(
