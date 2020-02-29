@@ -25,7 +25,7 @@ There are only 2 types of users:
 
 ## GraphQL Schema
 
-The current Schema used is [found here](https://github.com/fillipvt/with-faunadb-abac-auth/blob/master/schema.graphql).
+The current Schema used is [found here](https://github.com/fillipvt/with-faunadb-abac-auth/blob/master/schema.graphql). Notice the custom `@resolver`s.
 
 ## Custom resolvers
 
