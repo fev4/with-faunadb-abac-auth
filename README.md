@@ -268,4 +268,4 @@ Update(
 
 ## Thanks
 
-Special thanks to Leo Regnier and Ewan Edwards (FaunaDB team) for their incredible help.
+Special thanks to Leo Regnier, Ewan Edwards and the rest of the amazing team behind FaunaDB for their incredible help.
